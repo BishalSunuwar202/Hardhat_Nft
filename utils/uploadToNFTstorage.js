@@ -3,7 +3,7 @@ const fs = require("fs")
 const path = require("path")
 
 const pinataApiKey = process.env.PINATA_API_KEY || ""
-const pinataApiSecret = process.env.PINATA_API_SECRET || ""
+const pinataApiSecret = process.env.PINATA_API_SECRET_KEY || ""
 const pinata = new pinataSDK(pinataApiKey, pinataApiSecret)
 
 async function storeImages(imagesFilePath) {
