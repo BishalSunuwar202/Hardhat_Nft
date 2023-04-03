@@ -17,11 +17,18 @@ const metadataTemplate = {
     ],
 }
 
+let tokenUris  = [
+    "ipfs://QmRyvdcYVLFaYv52C7wVSCeXhFdsUuTH4qQxQPbwpjt4yG",
+    "ipfs://QmV53kdGpKSV6nYZvokNPvRWbVL4PGqohtawXoEcutwDDZ",
+    "ipfs://QmTdHe8bmqraUGuuAo7etdBcvK7UuPcpWN6RB6v9k4zbZ2",
+]
+
+fund_amount = "1000000000000000000000" // 10 Link ethers.parseUnit 
+
 module.exports = async function ({ getNamedAccounts, deployments }) {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
-    let tokenUris
     //IPFS hashes of the images
     if (process.env.UPLOAD_TO_PINATA == "true") {
         tokenUris = await handleTokenUris()
@@ -38,7 +45,8 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         const tx = await vrfCoordinatorV2Mock.createSubscription()
         const txReceipt = await tx.wait(1)
         subscriptionId = txReceipt.events[0].args.subId
-        console.log(subscriptionId)
+        //we need to fund the subscription 
+        await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, fund_amount)
     } else {
         vrfCoordinatorV2Address = networkConfig[chainId].vrfCoordinatorV2
         subscriptionId = networkConfig[chainId].subscriptionId
@@ -72,7 +80,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 }
 
 async function handleTokenUris() {
-    tokenUris = []
+    
     //store image and metadata in ipfs
     const { responses: imageUploadResponses, files } = await storeImages(imagesLocation)
     for (imageUploadResponseIndex in imageUploadResponses) {
