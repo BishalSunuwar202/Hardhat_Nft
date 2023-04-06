@@ -71,6 +71,7 @@ contract DynamicSvgNft is ERC721 {
                                 imageURI,
                                 '"}'
                             )
+                            //abi.encodePacked(a. b) this will also concatenate a and b
                         )
                     )
                 )

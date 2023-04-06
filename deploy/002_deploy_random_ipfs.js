@@ -71,6 +71,12 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
+
+    await vrfCoordinatorV2Mock.addConsumer(
+        subscriptionId,
+        randomIpfsNft.address
+    )
+    
     log("------------------------------------------")
 
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {

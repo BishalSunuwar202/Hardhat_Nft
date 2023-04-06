@@ -60,7 +60,7 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         i_subscriptionId = subscriptionId;
         i_gaslane = gaslane;
         i_callbackGasLimit = callbackGasLimit;
-        _initializeContract(dogTokenUris);
+        _initializeContract(dogTokenUris); 
         i_mintFee = mintFee;
     }
 
