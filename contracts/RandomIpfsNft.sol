@@ -42,9 +42,9 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     uint256 internal constant VALUE_MAX_CHANCE = 100;
     string[] internal s_dogTokenUris;
     uint256 internal immutable i_mintFee;
-    bool private s_initialized; 
+    bool private s_initialized;
 
-    //events 
+    //events
     event NftRequested(uint256 indexed requestId, address requester);
     event NftMinted(Breed dogBreed, address minter);
 
@@ -60,7 +60,7 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         i_subscriptionId = subscriptionId;
         i_gaslane = gaslane;
         i_callbackGasLimit = callbackGasLimit;
-        _initializeContract(dogTokenUris); 
+        _initializeContract(dogTokenUris);
         i_mintFee = mintFee;
     }
 
@@ -68,7 +68,7 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         if (msg.value < i_mintFee) {
             revert RandomIpfsNft__NeedMoreETHSent();
         }
-        //this makes a request to a chainlink node to get a random number 
+        //this makes a request to a chainlink node to get a random number
         requestId = i_vrfCoordinator.requestRandomWords(
             i_gaslane,
             i_subscriptionId,
@@ -89,7 +89,7 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         //what does this token look like?
         uint256 moddedRng = randomWords[0] % VALUE_MAX_CHANCE;
         Breed dogBreed = getBreedFromModdedRng(moddedRng);
-        s_tokenCounter += s_tokenCounter;
+        s_tokenCounter = s_tokenCounter + 1;
         _safeMint(dogOwner, newTokenId);
         _setTokenURI(newTokenId, /* that breed's tokenURI */ s_dogTokenUris[uint256(dogBreed)]);
         emit NftMinted(dogBreed, dogOwner);
@@ -121,11 +121,11 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     }
 
     function _initializeContract(string[3] memory dogTokenUris) private {
-        if(s_initialized){
+        if (s_initialized) {
             revert RandomIpfsNft__AlreadyInitialized();
         }
         s_dogTokenUris = dogTokenUris;
-        s_initialized = true;       
+        s_initialized = true;
     }
 
     //function tokenURI(uint256) public view override returns (string memory) {}
@@ -141,7 +141,7 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     function getTokenCounter() public view returns (uint256) {
         return s_tokenCounter;
     }
-    
+
     function getInitialized() public view returns (bool) {
         return s_initialized;
     }
