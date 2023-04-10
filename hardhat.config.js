@@ -34,6 +34,7 @@ module.exports = {
             url: SEPOLIA_RPC_URL,
             accounts: [PRIVATE_KEY],
             
+            
         },
     },
     etherscan: {

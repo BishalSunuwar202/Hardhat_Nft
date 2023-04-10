@@ -13,14 +13,15 @@ module.exports = async function ({ getNamedAccounts }) {
     //for random ipfs nft
     const randomIpfsNft = await ethers.getContract("RandomIpfsNft", deployer)
     const mintFee = await randomIpfsNft.getMintFee()
+    const randomIpfsNftMintTx = await randomIpfsNft.requestNFT({ value: mintFee.toString(), gasLimit: 1000000 })
+    const randomIpfsNftMintTxReceipt = await randomIpfsNftMintTx.wait(1)
 
     await new Promise(async (resolve, reject) => {
         setTimeout(resolve, 300000) //5 minutes
         randomIpfsNft.once("NftMinted", async function () {
             resolve()
         })
-        const randomIpfsNftMintTx = await randomIpfsNft.requestNFT({ value: mintFee.toString() })
-        const randomIpfsNftMintTxReceipt = await randomIpfsNftMintTx.wait(1)
+        
         if (developmentChains.includes(network.name)) {
             const requestId = randomIpfsNftMintTxReceipt.events[1].args.requestId.toString()
             const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock", deployer)

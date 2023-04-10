@@ -30,7 +30,7 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
     uint64 private immutable i_subscriptionId;
     bytes32 private immutable i_gaslane;
-    uint32 private immutable i_callbackGasLimit;
+    uint32 private i_callbackGasLimit;
     uint16 private immutable REQUEST_CONFIRMATIONS = 3;
     uint32 private immutable NUM_WORDS = 1;
 
@@ -80,6 +80,11 @@ contract RandomIpfsNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         s_requestIdToSender[requestId] = msg.sender;
         emit NftRequested(requestId, msg.sender);
     }
+
+    function changeGasLimit(uint32 gasLimit) public {
+            i_callbackGasLimit = gasLimit;
+    }
+
 
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
         //this way chainlink node will not be owner but the one who actually called requestNFT function
